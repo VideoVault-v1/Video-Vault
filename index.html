@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VideoVault - Download & Save Media from Anywhere</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --accent: #f72585;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-800: #343a40;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    body {
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, #4361ee, #7209b7);
+      color: white;
+      padding: 6rem 0 8rem;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: cover;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .hero .tagline {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero-icons {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .floating-icon {
+      position: absolute;
+      opacity: 0.15;
+      animation: float 8s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(5deg);
+      }
+
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+
+    /* Download Form */
+    .download-form-container {
+      margin-top: -5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .download-form {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      margin: 0 auto;
+      max-width: 800px;
+      transform: translateY(0);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .download-form:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--dark);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1.8rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+
+    input[type="url"],
+    select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background-color: var(--gray-100);
+    }
+
+    input[type="url"]:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+      background-color: white;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: block;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 6px 16px rgba(67, 97, 238, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn i {
+      margin-right: 8px;
+    }
+
+    /* Status Area */
+    .status-area {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 8px;
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+
+    .status-area.loading {
+      display: block;
+      background-color: var(--gray-100);
+      text-align: center;
+    }
+
+    .status-area.success {
+      display: block;
+      background-color: rgba(6, 214, 160, 0.15);
+      color: #06805e;
+      border-left: 4px solid var(--success);
+    }
+
+    .status-area.error {
+      display: block;
+      background-color: rgba(239, 71, 111, 0.15);
+      color: #c02f55;
+      border-left: 4px solid var(--danger);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(67, 97, 238, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .download-options {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .download-button {
+      background-color: var(--success);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      box-shadow: 0 3px 8px rgba(6, 214, 160, 0.25);
+      transition: all 0.3s;
+    }
+
+    .download-button:hover {
+      background-color: #05b587;
+      box-shadow: 0 4px 12px rgba(6, 214, 160, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .download-button i {
+      margin-right: 8px;
+    }
+
+    /* Copyright Notice */
+    .copyright-notice {
+      background-color: var(--warning);
+      color: var(--dark);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      border-left: 4px solid #e6bc5c;
+    }
+
+    .copyright-notice i {
+      margin-right: 0.5rem;
+    }
+
+    /* Platform section */
+    .platform-section {
+      padding: 5rem 0;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      text-align: center;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      max-width: 800px;
+      margin: 0 auto 3rem;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 2rem;
+      margin: 3rem auto;
+      max-width: 900px;
+    }
+
+    .platform-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s;
+    }
+
+    .platform-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .platform-icon {
+      height: 50px;
+      width: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      margin-bottom: 0.8rem;
+      transition: all 0.3s;
+    }
+
+    .platform-icon img {
+      height: 28px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .platform-item:hover .platform-icon {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .platform-item:hover .platform-icon img {
+      opacity: 1;
+    }
+
+    .platform-name {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    /* Features section */
+    .features-section {
+      padding: 5rem 0;
+      background-color: #f8f9fa;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2.5rem;
+      margin: 3rem 0;
+    }
+
+    .feature-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(45deg, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+      border-radius: 12px;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 1rem;
+      color: var(--dark);
+      font-size: 1.4rem;
+    }
+
+    .feature-card p {
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* How It Works section */
+    .how-it-works {
+      padding: 5rem 0;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      max-width: 900px;
+      margin: 4rem auto;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 10%;
+      width: 80%;
+      height: 3px;
+      background-color: var(--gray-200);
+      z-index: 1;
+    }
+
+    .step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      width: 25%;
+    }
+
+    .step-number {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin: 0 auto 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      border: 3px solid var(--primary);
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .step:hover .step-number {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2);
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      padding: 5rem 0;
+      background-color: var(--gray-100);
+    }
+
+    .faqs {
+      max-width: 800px;
+      margin: 3rem auto;
+    }
+
+    .faq-item {
+      background-color: white;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+
+    .faq-question:hover {
+      background-color: var(--gray-100);
+    }
+
+    .faq-question h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .faq-toggle {
+      color: var(--primary);
+      transition: transform 0.3s;
+    }
+
+    .faq-answer {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-answer p {
+      padding-bottom: 1.2rem;
+      color: #555;
+    }
+
+    .faq-item.active .faq-toggle {
+      transform: rotate(180deg);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+      padding-top: 0.5rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      color: white;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+
+    .cta-text {
+      font-size: 1.2rem;
+      margin-bottom: 2.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0.9;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background-color: white;
+      color: var(--secondary);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 4rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .footer-about p {
+      opacity: 0.7;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    .social-link:hover {
+      background-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .footer-title {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: white;
+      font-weight: 600;
+    }
+
+    .footer-links-list {
+      list-style: none;
+    }
+
+    .footer-links-list li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links-list a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links-list a:hover {
+      color: white;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .contact-item i {
+      margin-right: 1rem;
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate__animated {
+      animation-duration: 1s;
+    }
+
+    /* Dark Mode Toggle */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: var(--dark);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      transition: all 0.3s;
+    }
+
+    .dark-mode-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 3rem;
+      }
+
+      .steps {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .steps::before {
+        left: 50%;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        transform: translateX(-50%);
+      }
+
+      .step {
+        width: 100%;
+        max-width: 350px;
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero .tagline {
+        font-size: 1.2rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .platform-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+
+      .cta-title {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero {
+        padding: 4rem 0 6rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .download-form {
+        padding: 1.5rem;
+      }
+
+      .feature-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #121212;
+      color: var(--light);
+    }
+
+    body.dark-mode .download-form,
+    body.dark-mode .feature-card,
+    body.dark-mode .faq-item,
+    body.dark-mode .platform-icon {
+      background-color: #1e1e1e;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode .features-section,
+    body.dark-mode .faq-section {
+      background-color: #181818;
+    }
+
+    body.dark-mode .section-title,
+    body.dark-mode .feature-card h3,
+    body.dark-mode .faq-question h3 {
+      color: white;
+    }
+
+    body.dark-mode .section-subtitle,
+    body.dark-mode .feature-card p,
+    body.dark-mode .faq-answer p,
+    body.dark-mode .step-desc,
+    body.dark-mode .platform-name {
+      color: #aaa;
+    }
+
+    body.dark-mode input[type="url"],
+    body.dark-mode select {
+      background-color: #2a2a2a;
+      color: white;
+      border-color: #444;
+    }
+
+    body.dark-mode .faq-question:hover {
+      background-color: #252525;
+    }
+
+    body.dark-mode .dark-mode-toggle {
+      background-color: var(--primary);
+    }
+
+    body.dark-mode .dark-mode-toggle i {
+      content: "\f185";
+    }
+
+    body.dark-mode .copyright-notice {
+      background-color: #2a2a2a;
+      border-left-color: var(--warning);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Dark Mode Toggle -->
+  <div class="dark-mode-toggle" id="darkModeToggle">
+    <i class="fas fa-moon"></i>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-icons">
+      <!-- Icons will be added with JavaScript -->
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="animate__animated animate__fadeInDown">VideoVault</h1>
+        <p class="tagline animate__animated animate__fadeIn">Your Ultimate Media Hub - Download from Anywhere, Save for
+          Anytime</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Form -->
+  <section class="download-form-container">
+    <div class="container">
+      <div class="download-form animate__animated animate__fadeInUp">
+        <h2 class="form-title">Download Your Media in Seconds</h2>
+        <form id="download-form">
+          <div class="form-group">
+            <label for="url"><i class="fas fa-link"></i> Enter Media URL:</label>
+            <input type="url" id="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="format"><i class="fas fa-file-video"></i> Select Format:</label>
+            <select id="format" name="format">
+              <option value="best">Best Quality (Video + Audio)</option>
+              <option value="bestvideo+bestaudio">Best Video + Best Audio</option>
+              <option value="mp4">MP4</option>
+              <option value="webm">WebM</option>
+              <option value="mp3">MP3 (Audio only)</option>
+              <option value="m4a">M4A (Audio only)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-download"></i> Download Now
+          </button>
+        </form>
+
+        <div id="status" class="status-area"></div>
+
+        <!-- Copyright Notice -->
+        <div class="copyright-notice">
+          <i class="fas fa-exclamation-triangle"></i>
+          <strong>Legal Notice:</strong> VideoVault respects copyright laws. Do not download copyrighted material
+          without proper authorization. Downloads are intended for personal use only. Users are responsible for
+          complying with their local laws regarding media usage.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Platforms Section -->
+  <section class="platform-section">
+    <div class="container">
+      <h2 class="section-title">Supported Platforms</h2>
+      <p class="section-subtitle">Download videos, music, and more from over 1,000 different websites and platforms</p>
+
+      <div class="platform-grid">
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/youtube.svg" alt="YouTube">
+          </div>
+          <span class="platform-name">YouTube</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/instagram.svg" alt="Instagram">
+          </div>
+          <span class="platform-name">Instagram</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/tiktok.svg" alt="TikTok">
+          </div>
+          <span class="platform-name">TikTok</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/twitter.svg" alt="Twitter">
+          </div>
+          <span class="platform-name">Twitter</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/facebook.svg" alt="Facebook">
+          </div>
+          <span class="platform-name">Facebook</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <!-- Add this at the end of your index.html file where it was truncated -->
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/soundcloud.svg" alt="SoundCloud">
+          </div>
+          <span class="platform-name">SoundCloud</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/vimeo.svg" alt="Vimeo">
+          </div>
+          <span class="platform-name">Vimeo</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/twitch.svg" alt="Twitch">
+          </div>
+          <span class="platform-name">Twitch</span>
+        </div>
+        <div class="platform-item">
+          <div class="platform-icon">
+            <img src="https://cdnjs.cloudflare.com/ajax/libs/simple-icons/8.16.0/dailymotion.svg" alt="Dailymotion">
+          </div>
+          <span class="platform-name">Dailymotion</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Why Choose VideoVault?</h2>
+      <p class="section-subtitle">Simple, fast, and powerful - the ultimate media downloading experience</p>
+
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3>Lightning Fast</h3>
+          <p>Download your favorite videos and audio in seconds with our optimized download engine.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>Universal Support</h3>
+          <p>Works with 1000+ websites including YouTube, Instagram, TikTok, Twitter, and more.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Safe & Secure</h3>
+          <p>No ads, no tracking, no malware - just pure functionality with privacy protection.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <h3>Format Options</h3>
+          <p>Choose from multiple video and audio formats to suit your needs and device compatibility.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <h3>High Quality</h3>
+          <p>Download videos in the highest available quality including 4K and HD resolution.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h3>Mobile Friendly</h3>
+          <p>Fully responsive design works perfectly on all your devices - desktop, tablet, or phone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Download your favorite media in just 4 simple steps</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Paste URL</h3>
+          <p class="step-desc">Copy and paste the URL of the video or audio you want to download</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Choose Format</h3>
+          <p class="step-desc">Select your preferred format and quality options</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Process</h3>
+          <p class="step-desc">Our system will process and prepare your file for download</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3 class="step-title">Download</h3>
+          <p class="step-desc">Click the download button and save your file</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Got questions? We've got answers</p>
+
+      <div class="faqs">
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Is VideoVault free to use?</h3>
+            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, VideoVault is completely free to use with no hidden charges. You can download as many videos as you
+              want without any limitations.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Is downloading videos from YouTube legal?</h3>
+            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+          </div>
+          <div class="faq-answer">
+            <p>Downloading videos for personal use is generally acceptable in many countries. However, redistributing
+              copyrighted content is illegal. Always respect copyright laws and the terms of service of the platforms
+              you're downloading from.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>What formats can I download videos in?</h3>
+            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+          </div>
+          <div class="faq-answer">
+            <p>VideoVault supports multiple formats including MP4, WebM, MP3, and M4A. You can choose the best quality
+              or select a specific format that works for your device.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>How long does it take to download a video?</h3>
+            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+          </div>
+          <div class="faq-answer">
+            <p>The download speed depends on several factors including the video size, your internet connection, and our
+              server load. Most videos are processed and ready for download within seconds.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">
+            <h3>Can I download private or age-restricted videos?</h3>
+            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+          </div>
+          <div class="faq-answer">
+            <p>No, VideoVault can only download publicly available videos. Private, password-protected, or
+              age-restricted content that requires login cannot be downloaded.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="cta-title">Ready to Try VideoVault?</h2>
+      <p class="cta-text">Download your favorite videos and music in just a few clicks. It's fast, free, and easy to
+        use!</p>
+      <a href="#download-form" class="cta-btn">Start Downloading Now</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="footer-logo">VideoVault</div>
+          <p>Your ultimate solution for downloading and saving media from the web. Simple, fast, and completely free.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h3 class="footer-title">Quick Links</h3>
+          <ul class="footer-links-list">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">How It Works</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">About Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h3 class="footer-title">Legal</h3>
+          <ul class="footer-links-list">
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Copyright Policy</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+
+        <!-- <div class="footer-contact">
+          <h3 class="footer-title">Contact Us</h3>
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <span></span>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span></span>
+          </div>
+        </div>
+      </div> -->
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 VideoVault. All rights reserved. This site is for educational purposes only.</p>
+        </div>
+      </div>
+  </footer>
+
+  <!-- Add the JavaScript code here -->
+  <script>
+    // Add this script at the end of your HTML file, right before the closing </body> tag
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Dark Mode Toggle
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const toggleIcon = darkModeToggle.querySelector('i');
+
+      darkModeToggle.addEventListener('click', function () {
+        document.body.classList.toggle('dark-mode');
+        // Update icon
+        if (document.body.classList.contains('dark-mode')) {
+          toggleIcon.classList.remove('fa-moon');
+          toggleIcon.classList.add('fa-sun');
+        } else {
+          toggleIcon.classList.remove('fa-sun');
+          toggleIcon.classList.add('fa-moon');
+        }
+      });
+
+      // Floating icons in hero section
+      const heroIcons = document.querySelector('.hero-icons');
+      const icons = ['video', 'music', 'film', 'image', 'headphones', 'play', 'camera'];
+
+      icons.forEach((icon, index) => {
+        const iconEl = document.createElement('i');
+        iconEl.classList.add('fas', `fa-${icon}`, 'floating-icon');
+
+        // Random positioning
+        const top = Math.random() * 80 + 10; // 10% to 90%
+        const left = Math.random() * 80 + 10; // 10% to 90%
+
+        iconEl.style.top = `${top}%`;
+        iconEl.style.left = `${left}%`;
+        iconEl.style.fontSize = `${Math.random() * 2 + 1}rem`;
+
+        // Random animation delay
+        iconEl.style.animationDelay = `${index * 0.3}s`;
+
+        heroIcons.appendChild(iconEl);
+      });
+
+      // Handle download form submission
+      const downloadForm = document.getElementById('download-form');
+      const statusArea = document.getElementById('status');
+
+      downloadForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const url = document.getElementById('url').value;
+        const format = document.getElementById('format').value;
+
+        if (!url) {
+          showStatus('error', 'Please enter a valid URL');
+          return;
+        }
+
+        // Show loading state
+        showStatus('loading', '');
+
+        // Send request to server
+        fetch('/api/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url: url,
+            format: format
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Show success message with download button
+              showStatus('success', `
+                    <h3><i class="fas fa-check-circle"></i> Download Ready!</h3>
+                    <p>Title: ${data.title}</p>
+                    <div class="download-options">
+                        <a href="${data.downloadUrl}" class="download-button">
+                            <i class="fas fa-download"></i> Download Now
+                        </a>
+                    </div>
+                `);
+            } else {
+              // Show error message
+              showStatus('error', `<i class="fas fa-exclamation-circle"></i> ${data.error}`);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showStatus('error', '<i class="fas fa-exclamation-circle"></i> Server error occurred. Please try again later.');
+          });
+      });
+
+      // Helper function to show status messages
+      function showStatus(type, content) {
+        statusArea.className = 'status-area';
+        statusArea.classList.add(type);
+
+        if (type === 'loading') {
+          statusArea.innerHTML = `
+                <div class="loader"></div>
+                <p>Processing your request...</p>
+            `;
+        } else {
+          statusArea.innerHTML = content;
+        }
+      }
+
+      // FAQ items toggle
+      const faqItems = document.querySelectorAll('.faq-item');
+
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', () => {
+          faqItems.forEach(faq => {
+            if (faq !== item) {
+              faq.classList.remove('active');
+            }
+          });
+
+          item.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
